@@ -6,8 +6,13 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="vikingar-blog" />
+        <module name="vikingar-admin" />
+        <module name="vikingar-framework" />
+        <module name="vikingar-web" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="vikingar-frameword" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>
