@@ -3,6 +3,7 @@ package top.vikingar.controller;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.vikingar.domain.ResponseResult;
@@ -36,5 +37,15 @@ public class ArticleController {
     @GetMapping("articleList")
     public ResponseResult articleList(Integer pageNum, Integer pageSize, Long categoryId) {
         return articleService.getArticleList(pageNum, pageSize, categoryId);
+    }
+
+    /**
+     * pathVariable("io") 用于获取GetMapping("/{id}")中的 id
+     * @param id id
+     * @return res
+     */
+    @GetMapping("/{id}")
+    public ResponseResult getArticleDetail(@PathVariable("id")Long id) {
+        return articleService.getArticleDetail(id);
     }
 }

@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import top.vikingar.constants.SystemConstants;
 import top.vikingar.domain.ResponseResult;
 import top.vikingar.domain.entity.Article;
+import top.vikingar.domain.entity.Category;
+import top.vikingar.domain.vo.ArticleDetailVo;
 import top.vikingar.domain.vo.ArticleListVo;
 import top.vikingar.domain.vo.HotArticleVo;
 import top.vikingar.domain.vo.PageVo;
@@ -76,5 +78,22 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         PageVo pageVo = new PageVo(articleListVos, page.getTotal());
 
         return ResponseResult.okResult(pageVo);
+    }
+
+    @Override
+    public ResponseResult getArticleDetail(Long id) {
+
+        // 根据id查文章
+        Article article = getById(id);
+        // 封装Vo
+        ArticleDetailVo articleDetailVo = BeanCopyUtils.copyBean(article, ArticleDetailVo.class);
+        // 根据分类id查分类名
+        Long categoryId = articleDetailVo.getCategoryId();
+        Category category = categoryService.getById(categoryId);
+        if (category != null) {
+            articleDetailVo.setCategoryName(category.getName());
+        }
+        return ResponseResult.okResult(articleDetailVo);
+
     }
 }
