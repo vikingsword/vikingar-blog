@@ -29,7 +29,12 @@ public class ArticleController {
     }
 
     @GetMapping("hotArticleList")
-    public ResponseResult hotArticleList(){
+    public ResponseResult hotArticleList() {
         return articleService.getHotArticleList();
+    }
+
+    @GetMapping("articleList")
+    public ResponseResult articleList(Integer pageNum, Integer pageSize, Long categoryId) {
+        return articleService.getArticleList(pageNum, pageSize, categoryId);
     }
 }

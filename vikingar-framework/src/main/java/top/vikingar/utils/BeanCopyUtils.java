@@ -15,6 +15,7 @@ public class BeanCopyUtils {
 
     /**
      * bean conversion
+     * 按照相同参数名进行转化，要求类型也相同
      * @param source source
      * @param clazz clazz
      * @return res

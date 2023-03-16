@@ -2,14 +2,16 @@ package top.vikingar.domain.entity;
 
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+import lombok.experimental.Accessors;
 
 /**
  * 文章表(Article)表实体类
- *
+ *  Accessors 链式调用 使得set方法返回article对象（alt+7查询）
  * @author makejava
  * @since 2023-03-14 21:16:29
  */
@@ -17,6 +19,7 @@ import lombok.AllArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName("vikingar_article")
+@Accessors(chain = true)
 public class Article {
 
     private Long id;
@@ -36,6 +39,11 @@ public class Article {
      * 所属分类id
      */
     private Long categoryId;
+    /**
+     * 分类名称
+     */
+    @TableField(exist = false)
+    private String categoryName;
     /**
      * 缩略图
      */
