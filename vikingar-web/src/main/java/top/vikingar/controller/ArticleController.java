@@ -1,5 +1,6 @@
 package top.vikingar.controller;
 
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/article")
+@Api(tags = "文章")
 public class ArticleController {
 
     @Autowired

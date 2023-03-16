@@ -6,16 +6,15 @@ import lombok.NoArgsConstructor;
 
 /**
  * @author vikingar
- * @time 2023/3/14 23:50
+ * @time 2023/3/15 5:42
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class HotArticleVo {
+public class CategoryVo {
 
     private Long id;
 
-    private String title;
+    private String name;
 
-    private Long viewCount;
 }

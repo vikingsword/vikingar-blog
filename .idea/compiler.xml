@@ -12,8 +12,5 @@
         <module name="vikingar-web" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="vikingar-frameword" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
 </project>
