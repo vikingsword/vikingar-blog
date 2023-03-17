@@ -32,12 +32,17 @@ public class UserController {
      * @param user user
      * @return res
      */
-    @PostMapping("login")
+    @PostMapping("/login")
     public ResponseResult login(@RequestBody User user) {
         if (!StringUtils.hasText(user.getUserName())) {
             // 用户名校验
             throw new SystemException(AppHttpCodeEnum.REQUIRE_USERNAME);
         }
         return blogLoginService.login(user);
+    }
+
+    @PostMapping("/logout")
+    public ResponseResult logout() {
+        return blogLoginService.logout();
     }
 }
