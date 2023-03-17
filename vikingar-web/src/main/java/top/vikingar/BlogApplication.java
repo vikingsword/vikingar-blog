@@ -8,6 +8,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * @author vikingar
+ * EnableScheduling 启动定时任务
  * @time 2023/3/11 0:42
  */
 @SpringBootApplication

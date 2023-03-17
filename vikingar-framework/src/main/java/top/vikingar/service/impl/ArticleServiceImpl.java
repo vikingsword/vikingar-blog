@@ -17,6 +17,7 @@ import top.vikingar.mapper.ArticleMapper;
 import top.vikingar.service.ArticleService;
 import top.vikingar.service.CategoryService;
 import top.vikingar.utils.BeanCopyUtils;
+import top.vikingar.utils.RedisCache;
 
 import java.util.List;
 import java.util.Objects;
@@ -34,6 +35,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Autowired
     private CategoryService categoryService;
 
+    @Autowired
+    private RedisCache redisCache;
+
     @Override
     public ResponseResult getHotArticleList() {
 
@@ -43,6 +47,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         Page<Article> page = new Page<>(1, 10);
         page(page, wrapper);
         List<Article> articleList = page.getRecords();
+        // Integer --> Long : Long.valueOf((Integer).toString())
+        articleList.stream()
+                .map(article -> article.setViewCount(Long.valueOf((redisCache.getCacheMapValue("article:viewCount", article.getId().toString())).toString())))
+                .collect(Collectors.toList());
 
         // bean 拷贝
         List<HotArticleVo> hotArticleVos = BeanCopyUtils.copyBeanList(articleList, HotArticleVo.class);
@@ -67,10 +75,15 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         Page<Article> page = new Page<>(pageNum, pageSize);
         page(page, wrapper);
 
+        // 从 redis 中查询文章viewCount
         // 查询分类名称 链式编程
         List<Article> articles = page.getRecords();
         articles.stream()
-                .map(article -> article.setCategoryName(categoryService.getById(article.getCategoryId()).getName()))
+                .map(article -> {
+                    article.setCategoryName(categoryService.getById(article.getCategoryId()).getName());
+                    article.setViewCount(Long.valueOf((redisCache.getCacheMapValue("article:viewCount",article.getId().toString())).toString()));
+                    return article;
+                })
                 .collect(Collectors.toList());
 
         // 封装结果
@@ -85,6 +98,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
         // 根据id查文章
         Article article = getById(id);
+        //从 redis 中查询文章viewCount
+        Integer viewCount = redisCache.getCacheMapValue("article:viewCount", id.toString());
+        article.setViewCount(viewCount.longValue());
         // 封装Vo
         ArticleDetailVo articleDetailVo = BeanCopyUtils.copyBean(article, ArticleDetailVo.class);
         // 根据分类id查分类名
@@ -95,5 +111,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         }
         return ResponseResult.okResult(articleDetailVo);
 
+    }
+
+    @Override
+    public ResponseResult updateViewCount(Long id) {
+        redisCache.incrementCacheMapValue("article:viewCount", id.toString(), 1);
+        return ResponseResult.okResult();
     }
 }

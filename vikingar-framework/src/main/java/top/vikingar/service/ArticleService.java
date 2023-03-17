@@ -30,4 +30,11 @@ public interface ArticleService extends IService<Article> {
      * @return res
      */
     ResponseResult getArticleDetail(Long id);
+
+    /**
+     * updateViewCount
+     * @param id id
+     * @return res
+     */
+    ResponseResult updateViewCount(Long id);
 }
