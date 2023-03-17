@@ -5,14 +5,18 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import top.vikingar.domain.ResponseResult;
 import top.vikingar.domain.entity.Comment;
 import top.vikingar.domain.vo.CommentVo;
 import top.vikingar.domain.vo.PageVo;
+import top.vikingar.enums.AppHttpCodeEnum;
+import top.vikingar.exception.SystemException;
 import top.vikingar.mapper.CommentMapper;
 import top.vikingar.service.CommentService;
 import top.vikingar.service.UserService;
 import top.vikingar.utils.BeanCopyUtils;
+import top.vikingar.utils.SecurityUtils;
 
 import java.util.List;
 
@@ -55,13 +59,14 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
     /**
      * 根据根评论的id查询所对应的子评论的集合
+     *
      * @param id 根评论的id
      * @return
      */
     private List<CommentVo> getChildren(Long id) {
 
         LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Comment::getRootId,id);
+        queryWrapper.eq(Comment::getRootId, id);
         queryWrapper.orderByAsc(Comment::getCreateTime);
         List<Comment> comments = list(queryWrapper);
 
@@ -84,6 +89,17 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             }
         }
         return commentVos;
+    }
+
+
+    @Override
+    public ResponseResult addComment(Comment comment) {
+        //评论内容不能为空
+        if(!StringUtils.hasText(comment.getContent())){
+            throw new SystemException(AppHttpCodeEnum.CONTENT_NOT_NULL);
+        }
+        save(comment);
+        return ResponseResult.okResult();
     }
 
 }
