@@ -2,6 +2,7 @@ package top.vikingar.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import top.vikingar.annotation.SystemLog;
 import top.vikingar.domain.ResponseResult;
 import top.vikingar.domain.entity.User;
 import top.vikingar.service.UserService;
@@ -19,6 +20,7 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/userInfo")
+    @SystemLog(BusinessName = "更新用户信息")
     public ResponseResult userInfo() {
         return userService.getUserInfo();
     }
