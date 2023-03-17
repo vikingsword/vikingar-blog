@@ -39,6 +39,17 @@ public class SystemConstants {
     public static final String LINK_STATUS_UNCHECKED = "2";
 
 
+    /**
+     *  评论类型为文章
+     */
+    public static final String ARTICLE_COMMENT = "0";
+
+    /**
+     *  评论类型为友链
+     */
+    public static final String LINK_COMMENT = "1";
+
+
 
 
 }

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import top.vikingar.constants.SystemConstants;
 import top.vikingar.domain.ResponseResult;
 import top.vikingar.domain.entity.Comment;
 import top.vikingar.domain.vo.CommentVo;
@@ -16,7 +17,6 @@ import top.vikingar.mapper.CommentMapper;
 import top.vikingar.service.CommentService;
 import top.vikingar.service.UserService;
 import top.vikingar.utils.BeanCopyUtils;
-import top.vikingar.utils.SecurityUtils;
 
 import java.util.List;
 
@@ -33,12 +33,15 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     private UserService userService;
 
     @Override
-    public ResponseResult getCommentList(Long articleId, Integer pageNum, Integer pageSize) {
+    public ResponseResult getCommentList(String commentType, Long articleId, Integer pageNum, Integer pageSize) {
         //查询对应文章的根评论
         //对articleId进行判断  根评论 rootId为-1
         LambdaQueryWrapper<Comment> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Comment::getArticleId, articleId);
+        wrapper.eq(SystemConstants.ARTICLE_COMMENT.equals(commentType), Comment::getArticleId, articleId);
         wrapper.eq(Comment::getRootId, -1);
+
+        //评论类型
+        wrapper.eq(Comment::getType, commentType);
 
         //分页查询
         Page<Comment> page = new Page<>(pageNum, pageSize);
@@ -95,7 +98,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     @Override
     public ResponseResult addComment(Comment comment) {
         //评论内容不能为空
-        if(!StringUtils.hasText(comment.getContent())){
+        if (!StringUtils.hasText(comment.getContent())) {
             throw new SystemException(AppHttpCodeEnum.CONTENT_NOT_NULL);
         }
         save(comment);
