@@ -31,7 +31,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     AccessDeniedHandler accessDeniedHandler;
 
 
-
     /**
      * 重写这个方法使得AuthenticationManager 暴露在spring容器中,看注释
      * ctrl + O 展示所有方法
@@ -42,25 +41,33 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder(){
         // 使用BCryptPasswordEncoder进行加密
         return new BCryptPasswordEncoder();
+
     }
+
+    @Override
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                //关闭csrf
-                .csrf().disable()
-                //不通过Session获取SecurityContext
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authorizeRequests()
-                // 对于登录接口 允许匿名访问
-                .antMatchers("/login").anonymous()
-                //注销接口需要认证才能访问
-                .antMatchers("/logout").authenticated()
-                //jwt过滤器测试用，如果测试没有问题吧这里删除了 todo 未生效
-                .antMatchers("/user/userInfo").authenticated()
-//                .antMatchers("/upload").authenticated()
-                // 除上面外的所有请求全部不需要认证即可访问
-                .anyRequest().permitAll();
+            //关闭csrf
+            .csrf().disable()
+            //不通过Session获取SecurityContext
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+            .authorizeRequests()
+            // 对于登录接口 允许匿名访问
+            .antMatchers("/login").anonymous()
+            //注销接口需要认证才能访问
+            .antMatchers("/logout").authenticated()
+            //个人信息接口必须登录后才能访问
+            .antMatchers("/user/userInfo").authenticated()
+//            .antMatchers("/upload").authenticated()
+            // 除上面外的所有请求全部不需要认证即可访问
+            .anyRequest().permitAll();
 
         //配置异常处理器
         http.exceptionHandling()
@@ -74,9 +81,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors();
     }
 
-    @Override
-    @Bean
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
+
 }

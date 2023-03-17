@@ -9,6 +9,7 @@ import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,11 +27,15 @@ import java.io.InputStream;
  */
 @Data
 @Service
-@ConfigurationProperties(prefix = "oss")
 public class UploadServiceImpl implements UploadService {
 
+    @Value("${oss.accessKey}")
     private String accessKey;
+
+    @Value("${oss.secretKey}")
     private String secretKey;
+
+    @Value("${oss.bucket}")
     private String bucket;
 
 
@@ -63,12 +68,13 @@ public class UploadServiceImpl implements UploadService {
             Auth auth = Auth.create(accessKey, secretKey);
             String upToken = auth.uploadToken(bucket);
             try {
-                Response response = uploadManager.put(inputStream,key,upToken,null, null);
+                Response response = uploadManager.put(inputStream, key, upToken, null, null);
                 //解析上传成功的结果
                 DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
                 System.out.println(putRet.key);
                 System.out.println(putRet.hash);
-                return "http://r7yxkqloa.bkt.clouddn.com/"+key;
+                return "http://rrnk8fnjr.hb-bkt.clouddn.com/" + key;
+
             } catch (QiniuException ex) {
                 Response r = ex.response;
                 System.err.println(r.toString());
