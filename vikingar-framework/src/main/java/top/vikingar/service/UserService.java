@@ -1,6 +1,7 @@
 package top.vikingar.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import top.vikingar.domain.ResponseResult;
 import top.vikingar.domain.entity.User;
 
 
@@ -11,5 +12,7 @@ import top.vikingar.domain.entity.User;
  * @since 2023-03-16 23:23:54
  */
 public interface UserService extends IService<User> {
+
+    ResponseResult getUserInfo();
 
 }
