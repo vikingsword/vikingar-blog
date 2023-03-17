@@ -10,8 +10,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import top.vikingar.filter.JwtAuthenticationTokenFilter;
+import top.vikingar.handler.security.AuthenticationEntryPointImpl;
 
 /**
  * @author vikingar
@@ -22,6 +25,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
+
+    @Autowired
+    AuthenticationEntryPoint authenticationEntryPoint;
+
+    @Autowired
+    AccessDeniedHandler accessDeniedHandler;
+
+
 
     /**
      * 重写这个方法使得AuthenticationManager 暴露在spring容器中,看注释
@@ -37,17 +48,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                //关闭csrf
-                .csrf().disable()
-                //不通过Session获取SecurityContext
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authorizeRequests()
-                // 对于登录接口 允许匿名访问
-                .antMatchers("/login").anonymous()
-//                .antMatchers("/getAllLink").anonymous()
-                // 除上面外的所有请求全部不需要认证即可访问
-                .anyRequest().permitAll();
+            //关闭csrf
+            .csrf().disable()
+            //不通过Session获取SecurityContext
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+            .authorizeRequests()
+            // 对于登录接口 允许匿名访问
+            .antMatchers("/login").anonymous()
+//          .antMatchers("/getAllLink").anonymous()
+            // 除上面外的所有请求全部不需要认证即可访问
+            .anyRequest().permitAll();
+
+        //配置异常处理器
+        http.exceptionHandling()
+                .authenticationEntryPoint(authenticationEntryPoint)
+                .accessDeniedHandler(accessDeniedHandler);
 
 
         http.logout().disable();
