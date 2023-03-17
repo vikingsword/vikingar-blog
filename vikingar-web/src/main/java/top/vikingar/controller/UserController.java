@@ -1,10 +1,9 @@
 package top.vikingar.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import top.vikingar.domain.ResponseResult;
+import top.vikingar.domain.entity.User;
 import top.vikingar.service.UserService;
 
 /**
@@ -22,5 +21,10 @@ public class UserController {
     @GetMapping("/userInfo")
     public ResponseResult userInfo() {
         return userService.getUserInfo();
+    }
+
+    @PutMapping("/userInfo")
+    public ResponseResult updateUser(@RequestBody User user) {
+        return userService.updateUserInfo(user);
     }
 }
