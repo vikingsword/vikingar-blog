@@ -27,16 +27,16 @@ import java.io.InputStream;
  */
 @Data
 @Service
-//@ConfigurationProperties(prefix = "oss")
+@ConfigurationProperties(prefix = "oss")
 public class UploadServiceImpl implements UploadService {
 
-    @Value("${oss.accessKey}")
+//    @Value("${oss.accessKey}")
     private String accessKey;
 
-    @Value("${oss.secretKey}")
+//    @Value("${oss.secretKey}")
     private String secretKey;
 
-    @Value("${oss.bucket}")
+//    @Value("${oss.bucket}")
     private String bucket;
 
 
