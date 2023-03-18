@@ -3,6 +3,9 @@ package top.vikingar.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.vikingar.domain.ResponseResult;
 import top.vikingar.domain.entity.Category;
+import top.vikingar.domain.vo.CategoryVo;
+
+import java.util.List;
 
 
 /**
@@ -14,4 +17,7 @@ import top.vikingar.domain.entity.Category;
 public interface CategoryService extends IService<Category> {
 
     ResponseResult getCategoryList();
+
+    List<CategoryVo> listAllCategory();
+
 }

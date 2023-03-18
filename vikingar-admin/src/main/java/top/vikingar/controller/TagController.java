@@ -6,7 +6,10 @@ import top.vikingar.domain.ResponseResult;
 import top.vikingar.domain.dto.TagListDto;
 import top.vikingar.domain.entity.Tag;
 import top.vikingar.domain.vo.PageVo;
+import top.vikingar.domain.vo.TagVo;
 import top.vikingar.service.TagService;
+
+import java.util.List;
 
 /**
  * @author vikingar
@@ -42,5 +45,11 @@ public class TagController {
     @PutMapping()
     public ResponseResult update(@RequestBody Tag tag) {
         return tagService.updateTag(tag);
+    }
+
+    @GetMapping("/listAllTag")
+    public ResponseResult listAllTag(){
+        List<TagVo> list = tagService.listAllTag();
+        return ResponseResult.okResult(list);
     }
 }

@@ -66,6 +66,12 @@ public class SystemConstants {
     public static final String STATUS_NORMAL = "0";
 
 
+    /**
+     * 正常状态
+     */
+    public static final String NORMAL = "0";
+
+
 
 
 }

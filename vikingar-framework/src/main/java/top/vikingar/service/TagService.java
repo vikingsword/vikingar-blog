@@ -5,6 +5,9 @@ import top.vikingar.domain.ResponseResult;
 import top.vikingar.domain.dto.TagListDto;
 import top.vikingar.domain.entity.Tag;
 import top.vikingar.domain.vo.PageVo;
+import top.vikingar.domain.vo.TagVo;
+
+import java.util.List;
 
 
 /**
@@ -24,4 +27,7 @@ public interface TagService extends IService<Tag> {
     ResponseResult getTagById(Long id);
 
     ResponseResult updateTag(Tag tag);
+
+    List<TagVo> listAllTag();
+
 }
