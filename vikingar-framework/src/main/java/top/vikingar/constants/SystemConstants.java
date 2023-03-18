@@ -49,6 +49,22 @@ public class SystemConstants {
      */
     public static final String LINK_COMMENT = "1";
 
+    /**
+     *  菜单类型
+     */
+    public static final String MENU = "C";
+
+    /**
+     *  按钮类型
+     */
+    public static final String BUTTON = "F";
+
+
+    /**
+     *  状态为正常
+     */
+    public static final String STATUS_NORMAL = "0";
+
 
 
 
