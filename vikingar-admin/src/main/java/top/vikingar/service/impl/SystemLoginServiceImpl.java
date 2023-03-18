@@ -11,6 +11,7 @@ import top.vikingar.domain.entity.User;
 import top.vikingar.service.LoginService;
 import top.vikingar.utils.JwtUtil;
 import top.vikingar.utils.RedisCache;
+import top.vikingar.utils.SecurityUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,5 +45,12 @@ public class SystemLoginServiceImpl implements LoginService {
         Map<String, String> map = new HashMap<>();
         map.put("token", jwt);
         return ResponseResult.okResult(map);
+    }
+
+    @Override
+    public ResponseResult logout() {
+        Long userId = SecurityUtils.getUserId();
+        redisCache.deleteObject("login:" + userId);
+        return ResponseResult.okResult();
     }
 }
