@@ -1,4 +1,4 @@
-package top.vikingar.entity;
+package top.vikingar.domain.entity;
 
 import java.util.Date;
 

@@ -2,6 +2,7 @@ package top.vikingar.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.vikingar.domain.ResponseResult;
+import top.vikingar.domain.dto.AddArticleDto;
 import top.vikingar.domain.entity.Article;
 
 /**
@@ -37,4 +38,6 @@ public interface ArticleService extends IService<Article> {
      * @return res
      */
     ResponseResult updateViewCount(Long id);
+
+    ResponseResult add(AddArticleDto article);
 }

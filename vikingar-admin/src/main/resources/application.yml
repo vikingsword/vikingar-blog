@@ -22,7 +22,7 @@ mybatis-plus:
       logic-not-delete-value: 0
       id-type: auto
 
-#oss:
-#  accessKey: 0j97elK5dqkzXAYqJ-KSoltpG90XOZb7jvveFjxC
-#  secretKey: DnUPO0u6SGmKTSYEz9yo2gitC7ByOoskZfZi9vMK
-#  bucket: vikingar
+oss:
+  accessKey: 0j97elK5dqkzXAYqJ-KSoltpG90XOZb7jvveFjxC
+  secretKey: DnUPO0u6SGmKTSYEz9yo2gitC7ByOoskZfZi9vMK
+  bucket: vikingar

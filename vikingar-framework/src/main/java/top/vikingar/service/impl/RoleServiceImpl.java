@@ -2,7 +2,7 @@ package top.vikingar.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
-import top.vikingar.entity.Role;
+import top.vikingar.domain.entity.Role;
 import top.vikingar.mapper.RoleMapper;
 import top.vikingar.service.RoleService;
 

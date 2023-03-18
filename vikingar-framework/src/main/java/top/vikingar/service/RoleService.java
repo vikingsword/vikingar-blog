@@ -1,7 +1,7 @@
 package top.vikingar.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import top.vikingar.entity.Role;
+import top.vikingar.domain.entity.Role;
 
 import java.util.List;
 

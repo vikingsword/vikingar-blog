@@ -1,7 +1,7 @@
 package top.vikingar.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import top.vikingar.entity.Role;
+import top.vikingar.domain.entity.Role;
 
 import java.util.List;
 

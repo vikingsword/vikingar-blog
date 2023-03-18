@@ -5,9 +5,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import top.vikingar.constants.SystemConstants;
 import top.vikingar.domain.ResponseResult;
+import top.vikingar.domain.dto.AddArticleDto;
 import top.vikingar.domain.entity.Article;
+import top.vikingar.domain.entity.ArticleTag;
 import top.vikingar.domain.entity.Category;
 import top.vikingar.domain.vo.ArticleDetailVo;
 import top.vikingar.domain.vo.ArticleListVo;
@@ -15,11 +18,13 @@ import top.vikingar.domain.vo.HotArticleVo;
 import top.vikingar.domain.vo.PageVo;
 import top.vikingar.mapper.ArticleMapper;
 import top.vikingar.service.ArticleService;
+import top.vikingar.service.ArticleTagService;
 import top.vikingar.service.CategoryService;
 import top.vikingar.utils.BeanCopyUtils;
 import top.vikingar.utils.RedisCache;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -37,6 +42,12 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Autowired
     private RedisCache redisCache;
+
+    @Autowired
+    private ArticleTagService articleTagService;
+
+    @Autowired
+    private ArticleMapper articleMapper;
 
     @Override
     public ResponseResult getHotArticleList() {
@@ -116,6 +127,30 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     public ResponseResult updateViewCount(Long id) {
         redisCache.incrementCacheMapValue("article:viewCount", id.toString(), 1);
+        return ResponseResult.okResult();
+    }
+
+
+
+    @Override
+    @Transactional
+    public ResponseResult add(AddArticleDto articleDto) {
+        //添加 博客
+        Article article = BeanCopyUtils.copyBean(articleDto, Article.class);
+        save(article);
+
+        List<ArticleTag> articleTags = articleDto.getTags().stream()
+                .map(tagId -> new ArticleTag(article.getId(), tagId))
+                .collect(Collectors.toList());
+
+        //添加 博客和标签的关联
+        articleTagService.saveBatch(articleTags);
+
+        // 添加博客后一定要把数据库中的viewCount导入redis中，否则会空指针
+        List<Article> articles = articleMapper.selectList(null);
+        Map<String, Integer> map = articles.stream().collect(Collectors.toMap(a -> a.getId().toString(), a -> a.getViewCount().intValue()));
+        redisCache.setCacheMap("article:viewCount", map);
+
         return ResponseResult.okResult();
     }
 }
