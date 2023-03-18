@@ -17,7 +17,9 @@ public enum AppHttpCodeEnum {
     FILE_TYPE_ERROR(507, "文件类型异常"),
     USERNAME_NOT_NULL(508, "用户名不能为空"),
     PASSWORD_NOT_NULL(509, "密码不能为空"),
-    EMAIL_NOT_NULL(510, "邮箱不能为空");
+    EMAIL_NOT_NULL(510, "邮箱不能为空"),
+    TAG_NAME_NOT_NULL(511, "标签名不能为空"),
+    TAG_REMARK_NOT_NULL(512, "备注不能为空");
     int code;
     String msg;
 

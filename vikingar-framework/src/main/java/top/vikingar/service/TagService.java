@@ -1,7 +1,10 @@
 package top.vikingar.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import top.vikingar.domain.ResponseResult;
+import top.vikingar.domain.dto.TagListDto;
 import top.vikingar.domain.entity.Tag;
+import top.vikingar.domain.vo.PageVo;
 
 
 /**
@@ -12,4 +15,13 @@ import top.vikingar.domain.entity.Tag;
  */
 public interface TagService extends IService<Tag> {
 
+    ResponseResult<PageVo> getTagList(Integer pageNum, Integer pageSize, TagListDto tagListDto);
+
+    ResponseResult addTagList(TagListDto tagListDto);
+
+    ResponseResult deleteTagById(Long id);
+
+    ResponseResult getTagById(Long id);
+
+    ResponseResult updateTag(Tag tag);
 }
