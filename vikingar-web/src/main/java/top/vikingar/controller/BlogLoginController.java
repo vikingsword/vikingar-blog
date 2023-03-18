@@ -1,5 +1,7 @@
 package top.vikingar.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +18,7 @@ import top.vikingar.service.BlogLoginService;
  * @time 2023/3/17 14:33
  */
 @RestController
+@Api(tags = "登陆", description = "登陆相关接口")
 public class BlogLoginController {
 
 
@@ -30,10 +33,12 @@ public class BlogLoginController {
      * ②自定义UserDetailsService
      * 在这个实现类中去查询数据库
      * 注意配置passwordEncoder为BCryptPasswordEncoder
+     *
      * @param user user
      * @return res
      */
     @PostMapping("/login")
+    @ApiOperation(value = "用户登陆")
     public ResponseResult login(@RequestBody User user) {
         if (!StringUtils.hasText(user.getUserName())) {
             // 用户名校验
@@ -43,6 +48,7 @@ public class BlogLoginController {
     }
 
     @PostMapping("/logout")
+    @ApiOperation(value = "用户登出")
     public ResponseResult logout() {
         return blogLoginService.logout();
     }
