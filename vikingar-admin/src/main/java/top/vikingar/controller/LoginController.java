@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import top.vikingar.domain.ResponseResult;
 import top.vikingar.domain.entity.LoginUser;
+import top.vikingar.domain.entity.Menu;
 import top.vikingar.domain.entity.User;
 import top.vikingar.domain.vo.AdminUserInfoVo;
+import top.vikingar.domain.vo.RoutersVo;
 import top.vikingar.domain.vo.UserInfoVo;
 import top.vikingar.enums.AppHttpCodeEnum;
 import top.vikingar.exception.SystemException;
@@ -61,6 +63,16 @@ public class LoginController {
 
         AdminUserInfoVo adminUserInfoVo = new AdminUserInfoVo(perms,roleKeyList,userInfoVo);
         return ResponseResult.okResult(adminUserInfoVo);
+    }
+
+
+    @GetMapping("getRouters")
+    public ResponseResult<RoutersVo> getRouters(){
+        Long userId = SecurityUtils.getUserId();
+        //查询menu 结果是tree的形式
+        List<Menu> menus = menuService.selectRouterMenuTreeByUserId(userId);
+        //封装数据返回
+        return ResponseResult.okResult(new RoutersVo(menus));
     }
 
 }
