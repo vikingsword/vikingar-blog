@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import top.vikingar.constants.SystemConstants;
 import top.vikingar.domain.ResponseResult;
+import top.vikingar.domain.dto.AddCommentDto;
 import top.vikingar.domain.entity.Comment;
 import top.vikingar.service.CommentService;
+import top.vikingar.utils.BeanCopyUtils;
 
 /**
  * @author vikingar
@@ -31,8 +33,10 @@ public class CommentController {
 
     // todo require header add token
     @PostMapping
-    @ApiOperation(value = "友链评论列表", notes = "获取一页友链评论")
-    public ResponseResult addComment(@RequestBody Comment comment) {
+    @ApiOperation(value = "增加评论", notes = "添加评论")
+    public ResponseResult addComment(@RequestBody AddCommentDto commentDto) {
+        // todo 修改项目中的接收对象为 DTO
+        Comment comment = BeanCopyUtils.copyBean(commentDto, Comment.class);
         return commentService.addComment(comment);
     }
 

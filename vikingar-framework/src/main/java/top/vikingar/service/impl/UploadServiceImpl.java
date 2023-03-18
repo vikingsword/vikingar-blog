@@ -27,6 +27,7 @@ import java.io.InputStream;
  */
 @Data
 @Service
+//@ConfigurationProperties(prefix = "oss")
 public class UploadServiceImpl implements UploadService {
 
     @Value("${oss.accessKey}")
