@@ -2,14 +2,17 @@ package top.vikingar.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.vikingar.constants.SystemConstants;
+import top.vikingar.domain.ResponseResult;
 import top.vikingar.domain.entity.Menu;
 import top.vikingar.mapper.MenuMapper;
 import top.vikingar.service.MenuService;
 import top.vikingar.utils.SecurityUtils;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -20,6 +23,12 @@ import java.util.stream.Collectors;
  */
 @Service("menuService")
 public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements MenuService {
+
+    @Autowired
+    private MenuService menuService;
+
+    @Autowired
+    private MenuMapper menuMapper;
 
     @Override
     public List<String> selectPermsByUserId(Long id) {
@@ -69,7 +78,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     /**
      * 获取存入参数的 子Menu集合
      *
-     * @param menu menu
+     * @param menu  menu
      * @param menus menus
      * @return list
      */
@@ -80,5 +89,49 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
                 .collect(Collectors.toList());
         return childrenList;
     }
+
+
+    @Override
+    public ResponseResult getMenuList(String status, String menuName) {
+        LambdaQueryWrapper<Menu> wrapper = new LambdaQueryWrapper<>();
+        wrapper.like(Objects.nonNull(status), Menu::getStatus, status);
+        wrapper.like(Objects.nonNull(menuName), Menu::getMenuName, menuName);
+        wrapper.orderByAsc(true, Menu::getOrderNum);
+        List<Menu> list = list(wrapper);
+        return ResponseResult.okResult(list);
+    }
+
+    @Override
+    public ResponseResult addMenu(Menu menu) {
+        save(menu);
+        return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult getMenuInfoById(Long id) {
+        Menu menu = menuService.getById(id);
+        return ResponseResult.okResult(menu);
+    }
+
+    @Override
+    public ResponseResult updateMenu(Menu menu) {
+        updateById(menu);
+        return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult deleteMenu(Long id) {
+        // 不允许删除含有子菜单的父菜单
+        LambdaQueryWrapper<Menu> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Menu::getParentId, id);
+        Menu menu = menuService.getById(id);
+        List<Menu> list = menuService.list(wrapper);
+        if (menu.getParentId() == 0 || list.size() != 0) {
+            return ResponseResult.errorResult(500, "存在子菜单不允许删除");
+        }
+        menuMapper.deleteById(id);
+        return ResponseResult.okResult();
+    }
+
 
 }
