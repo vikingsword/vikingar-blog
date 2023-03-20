@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import top.vikingar.constants.SystemConstants;
 import top.vikingar.domain.ResponseResult;
 import top.vikingar.domain.dto.RoleAddDto;
 import top.vikingar.domain.dto.RoleChangeStatusDto;
@@ -114,6 +115,14 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     public ResponseResult deleteRole(Long id) {
         roleMapper.deleteById(id);
         return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult listAllRole() {
+        LambdaQueryWrapper<Role> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Role::getStatus, SystemConstants.STATUS_NORMAL);
+        List<Role> list = list(wrapper);
+        return ResponseResult.okResult(list);
     }
 
 }
