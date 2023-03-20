@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import top.vikingar.domain.ResponseResult;
 import top.vikingar.domain.dto.AddArticleDto;
+import top.vikingar.domain.vo.ArticleTagVo;
 import top.vikingar.service.ArticleService;
 
 @RestController
@@ -31,6 +32,16 @@ public class ArticleController {
     @GetMapping("/{id}")
     public ResponseResult getArticleById(@PathVariable("id") Long id) {
         return articleService.getArticleById(id);
+    }
+
+    @PutMapping
+    public ResponseResult update(@RequestBody ArticleTagVo articleTagInfo) {
+        return articleService.updateArticle(articleTagInfo);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseResult delete(@PathVariable("id") Long id) {
+        return articleService.deleteArticle(id);
     }
 
 

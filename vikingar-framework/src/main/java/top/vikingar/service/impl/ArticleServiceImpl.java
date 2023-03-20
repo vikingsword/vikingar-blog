@@ -14,6 +14,7 @@ import top.vikingar.domain.entity.ArticleTag;
 import top.vikingar.domain.entity.Category;
 import top.vikingar.domain.vo.*;
 import top.vikingar.mapper.ArticleMapper;
+import top.vikingar.mapper.ArticleTagMapper;
 import top.vikingar.mapper.TagMapper;
 import top.vikingar.service.ArticleService;
 import top.vikingar.service.ArticleTagService;
@@ -43,6 +44,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Autowired
     private ArticleTagService articleTagService;
+
+    @Autowired
+    private ArticleTagMapper articleTagMapper;
 
     @Autowired
     private ArticleMapper articleMapper;
@@ -174,7 +178,32 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         wrapper.eq(ArticleTag::getArticleId, id);
 
         List<Long> tagList = articleTagService.list(wrapper).stream().map(tag -> tag.getTagId()).collect(Collectors.toList());
-        ArticleTagVo articleTagVo = new ArticleTagVo(article, tagList);
+        ArticleTagVo articleTagVo = BeanCopyUtils.copyBean(article, ArticleTagVo.class);
+        articleTagVo.setTags(tagList);
         return ResponseResult.okResult(articleTagVo);
+    }
+
+    @Override
+    public ResponseResult updateArticle(ArticleTagVo articleTagInfo) {
+        Article article = BeanCopyUtils.copyBean(articleTagInfo, Article.class);
+        updateById(article);
+        List<Long> tags = articleTagInfo.getTags();
+        List<ArticleTag> articleTagList = tags.stream().map(tag -> {
+            ArticleTag articleTag = new ArticleTag();
+            articleTag.setArticleId(article.getId());
+            articleTag.setTagId(tag);
+            return articleTag;
+        }).collect(Collectors.toList());
+        LambdaQueryWrapper<ArticleTag> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(ArticleTag::getArticleId,article.getId());
+        articleTagService.remove(wrapper);
+        articleTagService.saveBatch(articleTagList);
+        return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult deleteArticle(Long id) {
+        articleMapper.deleteById(id);
+        return ResponseResult.okResult();
     }
 }

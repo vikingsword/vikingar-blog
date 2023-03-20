@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import top.vikingar.domain.ResponseResult;
 import top.vikingar.domain.dto.AddArticleDto;
 import top.vikingar.domain.entity.Article;
+import top.vikingar.domain.vo.ArticleTagVo;
 
 /**
  * @author vikingar
@@ -45,4 +46,9 @@ public interface ArticleService extends IService<Article> {
     ResponseResult getArticleList2(Integer pageNum, Integer pageSize, String title, String summary);
 
     ResponseResult getArticleById(Long id);
+
+    ResponseResult updateArticle(ArticleTagVo articleTagInfo);
+
+    ResponseResult deleteArticle(Long id);
+
 }
