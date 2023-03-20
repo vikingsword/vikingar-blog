@@ -3,6 +3,8 @@ package top.vikingar.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.vikingar.domain.ResponseResult;
 import top.vikingar.domain.entity.Link;
+import top.vikingar.domain.vo.LinkInfoVo;
+import top.vikingar.domain.vo.LinkVo;
 
 
 /**
@@ -19,4 +21,13 @@ public interface LinkService extends IService<Link> {
      */
     ResponseResult getAllLink();
 
+    ResponseResult getLink(Integer pageNum, Integer pageSize, String name, String status);
+
+    ResponseResult add(LinkVo linkDto);
+
+    ResponseResult getLinkInfo(Long id);
+
+    ResponseResult updateLink(LinkInfoVo linkDto);
+
+    ResponseResult deleteLink(Long id);
 }
