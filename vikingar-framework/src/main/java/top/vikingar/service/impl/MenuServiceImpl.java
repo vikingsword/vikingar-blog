@@ -7,8 +7,13 @@ import org.springframework.stereotype.Service;
 import top.vikingar.constants.SystemConstants;
 import top.vikingar.domain.ResponseResult;
 import top.vikingar.domain.entity.Menu;
+import top.vikingar.domain.entity.RoleMenu;
+import top.vikingar.domain.vo.MenuTreeVo;
+import top.vikingar.domain.vo.RoleMenuTreeVo;
 import top.vikingar.mapper.MenuMapper;
 import top.vikingar.service.MenuService;
+import top.vikingar.service.RoleMenuService;
+import top.vikingar.utils.BeanCopyUtils;
 import top.vikingar.utils.SecurityUtils;
 
 import java.util.List;
@@ -29,6 +34,9 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     @Autowired
     private MenuMapper menuMapper;
+
+    @Autowired
+    private RoleMenuService roleMenuService;
 
     @Override
     public List<String> selectPermsByUserId(Long id) {
@@ -78,7 +86,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     /**
      * 获取存入参数的 子Menu集合
      *
-     * @param menu  menu
+     * @param menu  menus
      * @param menus menus
      * @return list
      */
@@ -131,6 +139,51 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         }
         menuMapper.deleteById(id);
         return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult getMenuTree() {
+        MenuMapper menuMapper = getBaseMapper();
+        List<MenuTreeVo> menus = menuMapper.selectAllMenu();
+
+        //构建tree todo 第三层tree没有查到
+        //先找出第一层的菜单  然后去找他们的子菜单设置到children属性中
+        List<MenuTreeVo> menuTree = builderMenuTreeVo(menus, 0L);
+        return ResponseResult.okResult(menuTree);
+    }
+
+
+
+    private List<MenuTreeVo> builderMenuTreeVo(List<MenuTreeVo> menus, Long parentId) {
+        List<MenuTreeVo> menuTree = menus.stream()
+                .filter(menu -> menu.getParentId().equals(parentId))
+                .map(menu -> menu.setChildren(getChildrenVo(menu, menus)))
+                .collect(Collectors.toList());
+        return menuTree;
+    }
+
+    private List<MenuTreeVo> getChildrenVo(MenuTreeVo menu, List<MenuTreeVo> menus) {
+        List<MenuTreeVo> childrenList = menus.stream()
+                .filter(m -> m.getParentId().equals(menu.getId()))
+                .map(m -> m.setChildren(getChildrenVo(m, menus)))
+                .collect(Collectors.toList());
+        return childrenList;
+    }
+
+
+    @Override
+    public ResponseResult getRoleMenuTreeById(Long id) {
+        MenuMapper menuMapper = getBaseMapper();
+        List<MenuTreeVo> menus = menuMapper.selectAllMenu();
+
+        //构建tree 先找出第一层的菜单  然后去找他们的子菜单设置到children属性中
+        List<MenuTreeVo> menuTree = builderMenuTreeVo(menus, 0L);
+        List<String> checkedKeys = roleMenuService.list(new LambdaQueryWrapper<RoleMenu>().eq(RoleMenu::getRoleId, id))
+                .stream().map(rm -> String.valueOf(rm.getMenuId()))
+                .collect(Collectors.toList());
+        RoleMenuTreeVo roleMenuTreeVo = new RoleMenuTreeVo(menuTree, checkedKeys);
+
+        return ResponseResult.okResult(roleMenuTreeVo);
     }
 
 

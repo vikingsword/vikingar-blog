@@ -3,6 +3,8 @@ package top.vikingar.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import top.vikingar.domain.ResponseResult;
+import top.vikingar.domain.dto.RoleAddDto;
+import top.vikingar.domain.dto.RoleUpdateDto;
 import top.vikingar.domain.entity.Menu;
 import top.vikingar.service.MenuService;
 
@@ -41,5 +43,16 @@ public class MenuController {
     public ResponseResult deleteMenu(@PathVariable("menuId") Long id) {
         return menuService.deleteMenu(id);
     }
+
+    @GetMapping("/treeselect")
+    public ResponseResult getMenuTree() {
+        return menuService.getMenuTree();
+    }
+
+    @GetMapping("/roleMenuTreeselect/{id}")
+    public ResponseResult getRoleMenuTreeById(@PathVariable("id") Long id) {
+        return menuService.getRoleMenuTreeById(id);
+    }
+
 
 }

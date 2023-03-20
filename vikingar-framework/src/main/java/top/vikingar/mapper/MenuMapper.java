@@ -3,6 +3,7 @@ package top.vikingar.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import top.vikingar.domain.entity.Menu;
+import top.vikingar.domain.vo.MenuTreeVo;
 
 import java.util.List;
 
@@ -20,4 +21,7 @@ public interface MenuMapper extends BaseMapper<Menu> {
     List<Menu> selectAllRouterMenu();
 
     List<Menu> selectRouterMenuTreeByUserId(Long userId);
+
+    List<MenuTreeVo> selectAllMenu();
+
 }
