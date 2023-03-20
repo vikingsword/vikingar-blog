@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.vikingar.constants.SystemConstants;
 import top.vikingar.domain.ResponseResult;
+import top.vikingar.domain.dto.CategoryAddDto;
 import top.vikingar.domain.entity.Article;
 import top.vikingar.domain.entity.Category;
 import top.vikingar.domain.vo.CategoryPageVo;
@@ -35,6 +36,9 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
     @Autowired
     private ArticleService articleService;
+
+    @Autowired
+    private CategoryService categoryService;
 
     @Override
     public ResponseResult getCategoryList() {
@@ -82,6 +86,33 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         PageVo pageVo = new PageVo(categoryPageVos, page.getTotal());
 
         return ResponseResult.okResult(pageVo);
+    }
+
+    @Override
+    public ResponseResult add(CategoryAddDto categoryAddDto) {
+        Category category = BeanCopyUtils.copyBean(categoryAddDto, Category.class);
+        save(category);
+        return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult updateGetInfo(Long id) {
+        Category category = categoryService.getById(id);
+        CategoryPageVo categoryVo = BeanCopyUtils.copyBean(category, CategoryPageVo.class);
+        return ResponseResult.okResult(categoryVo);
+    }
+
+    @Override
+    public ResponseResult updateCategory(CategoryPageVo categoryDto) {
+        Category category = BeanCopyUtils.copyBean(categoryDto, Category.class);
+        categoryService.updateById(category);
+        return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult deleteCategory(Long id) {
+        categoryService.removeById(id);
+        return ResponseResult.okResult();
     }
 
 

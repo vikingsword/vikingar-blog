@@ -3,6 +3,8 @@ package top.vikingar.domain.entity;
 import java.util.Date;
 
 import java.io.Serializable;
+
+import com.baomidou.mybatisplus.annotation.IdType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +22,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 @NoArgsConstructor
 @TableName("vikingar_category")
 public class Category  {
-    @TableId
+
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     //分类名

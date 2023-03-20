@@ -3,12 +3,10 @@ package top.vikingar.controller;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import top.vikingar.domain.ResponseResult;
+import top.vikingar.domain.dto.CategoryAddDto;
 import top.vikingar.domain.entity.Category;
 import top.vikingar.domain.vo.CategoryPageVo;
 import top.vikingar.domain.vo.CategoryVo;
@@ -64,5 +62,27 @@ public class CategoryController {
             WebUtils.renderString(response, JSON.toJSONString(result));
         }
     }
+
+    @PostMapping
+    public ResponseResult add(@RequestBody CategoryAddDto categoryAddDto) {
+        return categoryService.add(categoryAddDto);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseResult updateGetInfo(@PathVariable("id") Long id) {
+        return categoryService.updateGetInfo(id);
+    }
+
+    @PutMapping
+    public ResponseResult update(@RequestBody CategoryPageVo categoryDto) {
+        return categoryService.updateCategory(categoryDto);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseResult delete(@PathVariable("id") Long id) {
+        return categoryService.deleteCategory(id);
+    }
+
+
 
 }
