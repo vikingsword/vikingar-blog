@@ -18,9 +18,19 @@ public class ArticleController {
         return articleService.add(article);
     }
 
-    @GetMapping("/list")
+//    @GetMapping("/list")
     public ResponseResult list(Integer pageNum, Integer pageSize, Long categoryId) {
         return articleService.getArticleList(pageNum, pageSize, categoryId);
+    }
+
+    @GetMapping("/list")
+    public ResponseResult list2(Integer pageNum, Integer pageSize, String title, String summary) {
+        return articleService.getArticleList2(pageNum, pageSize, title, summary);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseResult getArticleById(@PathVariable("id") Long id) {
+        return articleService.getArticleById(id);
     }
 
 

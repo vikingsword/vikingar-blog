@@ -40,4 +40,9 @@ public interface ArticleService extends IService<Article> {
     ResponseResult updateViewCount(Long id);
 
     ResponseResult add(AddArticleDto article);
+
+
+    ResponseResult getArticleList2(Integer pageNum, Integer pageSize, String title, String summary);
+
+    ResponseResult getArticleById(Long id);
 }

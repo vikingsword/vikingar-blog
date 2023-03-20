@@ -12,11 +12,9 @@ import top.vikingar.domain.dto.AddArticleDto;
 import top.vikingar.domain.entity.Article;
 import top.vikingar.domain.entity.ArticleTag;
 import top.vikingar.domain.entity.Category;
-import top.vikingar.domain.vo.ArticleDetailVo;
-import top.vikingar.domain.vo.ArticleListVo;
-import top.vikingar.domain.vo.HotArticleVo;
-import top.vikingar.domain.vo.PageVo;
+import top.vikingar.domain.vo.*;
 import top.vikingar.mapper.ArticleMapper;
+import top.vikingar.mapper.TagMapper;
 import top.vikingar.service.ArticleService;
 import top.vikingar.service.ArticleTagService;
 import top.vikingar.service.CategoryService;
@@ -48,6 +46,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Autowired
     private ArticleMapper articleMapper;
+
+//    @Autowired
+//    private ArticleTagService articleTagService;
 
     @Override
     public ResponseResult getHotArticleList() {
@@ -92,7 +93,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         articles.stream()
                 .map(article -> {
                     article.setCategoryName(categoryService.getById(article.getCategoryId()).getName());
-                    article.setViewCount(Long.valueOf((redisCache.getCacheMapValue("article:viewCount",article.getId().toString())).toString()));
+                    article.setViewCount(Long.valueOf((redisCache.getCacheMapValue("article:viewCount", article.getId().toString())).toString()));
                     return article;
                 })
                 .collect(Collectors.toList());
@@ -131,7 +132,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
 
 
-
     @Override
     @Transactional
     public ResponseResult add(AddArticleDto articleDto) {
@@ -152,5 +152,29 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         redisCache.setCacheMap("article:viewCount", map);
 
         return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult getArticleList2(Integer pageNum, Integer pageSize, String title, String summary) {
+        LambdaQueryWrapper<Article> wrapper = new LambdaQueryWrapper<>();
+        wrapper.like(Objects.nonNull(title), Article::getTitle, title);
+        wrapper.like(Objects.nonNull(summary), Article::getSummary, summary);
+        Page<Article> page = new Page<>(pageNum, pageSize);
+        page(page, wrapper);
+
+        List<ArticleListDetailVo> listDetailVos = BeanCopyUtils.copyBeanList(page.getRecords(), ArticleListDetailVo.class);
+        PageVo pageVo = new PageVo(listDetailVos, page.getTotal());
+        return ResponseResult.okResult(pageVo);
+    }
+
+    @Override
+    public ResponseResult getArticleById(Long id) {
+        Article article = getById(id);
+        LambdaQueryWrapper<ArticleTag> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(ArticleTag::getArticleId, id);
+
+        List<Long> tagList = articleTagService.list(wrapper).stream().map(tag -> tag.getTagId()).collect(Collectors.toList());
+        ArticleTagVo articleTagVo = new ArticleTagVo(article, tagList);
+        return ResponseResult.okResult(articleTagVo);
     }
 }
