@@ -39,7 +39,7 @@ public class BlogLoginController {
      */
     @PostMapping("/login")
     @ApiOperation(value = "用户登陆")
-    public ResponseResult login(@RequestBody @Valid User user) {
+    public ResponseResult login(@RequestBody @Validated User user) {
 //        if (!StringUtils.hasText(user.getUserName())) {
 //            // 用户名校验
 //            throw new SystemException(AppHttpCodeEnum.REQUIRE_USERNAME);

@@ -27,12 +27,14 @@ public class User {
 
     //用户名
     @NotBlank(message = "用户名不能为空")
-    @Size(min = 3, message = "用户名长度不能小于6个字符")
+    @Size(min = 4, message = "用户名长度不能小于4个字符")
     private String userName;
 
     //昵称
     private String nickName;
     //密码
+    @NotBlank(message = "密码不能为空")
+    @Size(min = 4, message = "密码长度不能小于4个字符")
     private String password;
     //用户类型：0代表普通用户，1代表管理员
     private String type;
