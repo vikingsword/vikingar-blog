@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.Date;
 
 /**
@@ -24,7 +26,10 @@ public class User {
     private Long id;
 
     //用户名
+    @NotBlank(message = "用户名不能为空")
+    @Size(min = 3, message = "用户名长度不能小于6个字符")
     private String userName;
+
     //昵称
     private String nickName;
     //密码
