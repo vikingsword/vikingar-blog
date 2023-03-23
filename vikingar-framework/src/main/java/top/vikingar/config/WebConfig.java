@@ -37,6 +37,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     /**
      * 使用@Bean注入fastJsonHttpMessageConvert
+     * 通过@RequestBody，@ResponseBody 完成请求报文到响应对象及响应对象到响应报文的转换
      * fastJson配置
      * @return converter
      */
